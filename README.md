@@ -1,30 +1,35 @@
-# 🛡️ LinkGuard — Phishing URL Checker
 
-LinkGuard is a lightweight cybersecurity web application built with Python and Streamlit. It checks URLs for common warning signs associated with phishing and suspicious links.
+# 🛡️ LinkGuard
+
+LinkGuard is a Python and Streamlit application that analyzes URLs for
+common warning signs and optionally retrieves an existing VirusTotal report.
 
 ## Features
 
-- Detects URLs containing IP addresses instead of domain names.
-- Flags unencrypted HTTP connections.
-- Identifies URLs containing embedded credentials or `@` symbols.
-- Checks for unusually long domains, URLs, and suspicious domain patterns.
-- Provides simple explanations of detected warning signs.
+- URL validation and normalization
+- Detection of IP-address URLs
+- HTTP versus HTTPS warning
+- Suspicious subdomain and known-brand impersonation heuristics
+- Internationalized-domain and punycode warnings
+- Checks for unusual ports, long URLs, and malformed hostnames
+- Optional VirusTotal existing-report lookup
+- Automated tests with pytest
+- API-key configuration through a local environment file
 
-## Technologies Used
+## Technology
 
 - Python
 - Streamlit
-- Regular Expressions
-- Python Standard Library
+- tldextract
+- Requests
+- python-dotenv
+- pytest
 
-## Getting Started
+## Setup
 
-### 1. Clone the repository
+### 1. Download or clone the project
 
-```bash
-git clone https://github.com/Thuto16/LinkGuard.git
-cd LinkGuard
-```
+Open a terminal in the project folder.
 
 ### 2. Install dependencies
 
@@ -38,19 +43,62 @@ python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-## Limitations
+## Optional VirusTotal integration
 
-LinkGuard uses basic URL-pattern heuristics. It does not verify a website's reputation or confirm whether a URL is malicious. A warning does not prove a link is dangerous, and no warning does not guarantee safety.
+LinkGuard can retrieve an existing URL report from VirusTotal.
 
-## Future Improvements
+1. Create an account with VirusTotal and review its API terms.
+2. Obtain an API key through your account.
+3. Create a local file named `.env` in the project folder.
+4. Add the following line:
 
-- Integrate a reputable URL reputation service.
-- Improve detection of misleading subdomains.
-- Add automated tests.
-- Improve accessibility and interface styling.
+```text
+VIRUSTOTAL_API_KEY=your_real_api_key_here
+```
 
-## Author
+5. Restart Streamlit.
 
-**Oratile Thuto Mabe**
+The `.env` file is excluded from Git by `.gitignore`.
 
-GitHub: [@Thuto16](https://github.com/Thuto16)
+Reputation checks are optional and require explicit selection in the interface.
+They retrieve an existing report; they do not automatically submit new URLs
+for scanning.
+
+A URL lookup discloses the URL to VirusTotal. Do not check confidential URLs.
+
+## Run automated tests
+
+```bash
+python -m pytest -v
+```
+
+The tests use mocked responses for the reputation API, so they do not require
+a real API key or make actual VirusTotal requests.
+
+## Important limitations
+
+- Heuristic warnings are not proof that a URL is malicious.
+- No warnings do not guarantee that a URL is safe.
+- The known-brand list is limited and cannot cover every company.
+- Public suffix data may not always be current.
+- A URL with no existing VirusTotal report is not necessarily safe.
+- Reputation services can produce false positives and false negatives.
+- An API lookup may fail because of network issues, access restrictions,
+  or rate limits.
+
+## Privacy and security
+
+Never commit API keys or `.env` files to a public repository.
+Do not submit private or confidential URLs to external reputation services.
+
+## Documentation
+
+- Streamlit: https://docs.streamlit.io/
+- tldextract: https://github.com/john-kurkowski/tldextract
+- VirusTotal API: https://docs.virustotal.com/reference/overview
+- pytest: https://docs.pytest.org/
+
+## Disclaimer
+
+LinkGuard is an educational URL-analysis tool, not a guarantee of website
+safety or a replacement for browser security protections.
